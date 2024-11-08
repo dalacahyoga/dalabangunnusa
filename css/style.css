@@ -131,6 +131,7 @@ h1, h2, h3, h4, h5, h6, figure {
 @media screen and (max-width: 768px) {
   .fh5co-nav {
     margin: 2em 0 2em 0;
+    position: fixed;
   }
 }
 .fh5co-nav .top-menu {
@@ -1213,5 +1214,52 @@ input[type="text"] {
     padding-top: 30px;
   }
 }
+
+.whatsapp-floating {
+  position: fixed;
+  bottom: 20px;  /* Jarak dari bawah */
+  right: 20px;   /* Jarak dari kanan */
+  background-color: #25D366;  /* Warna hijau khas WhatsApp */
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Efek bayangan */
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 9999;  /* Agar berada di atas elemen lainnya */
+  transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Efek saat hover */
+  .whatsapp-floating:hover {
+  transform: scale(1.1); /* Membesar sedikit saat hover */
+  }
+  
+  /* Mengatur ikon */
+  .whatsapp-floating i {
+  margin: 0;
+  }
+
+  /* Responsif untuk ukuran tablet dan perangkat mobile */
+  @media (max-width: 768px) {
+  .whatsapp-floating {
+    bottom: 15px;  /* Mengurangi jarak bawah pada layar kecil */
+    right: 15px;   /* Mengurangi jarak kanan pada layar kecil */
+    padding: 12px; /* Mengurangi padding untuk ukuran lebih kecil */
+    font-size: 22px; /* Menyesuaikan ukuran ikon */
+  }
+  }
+
+  @media (max-width: 480px) {
+  .whatsapp-floating {
+    bottom: 10px;  /* Lebih dekat ke bawah pada ponsel */
+    right: 10px;   /* Lebih dekat ke kanan pada ponsel */
+    padding: 10px; /* Padding lebih kecil */
+    font-size: 20px; /* Ukuran ikon lebih kecil */
+  }
+  }
 
 /*# sourceMappingURL=style.css.map */
