@@ -1261,4 +1261,25 @@ input[type="text"] {
   }
   }
 
+  .carousel-item img {
+    width: 100%;  /* Make sure image width is 100% of its container */
+    max-height: 400px; /* Set a maximum height for the image */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+  }
+
+  .room-description {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .room-title {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .room-details {
+    font-size: 1.1rem;
+    color: #6c757d;
+  }
+
 /*# sourceMappingURL=style.css.map */
