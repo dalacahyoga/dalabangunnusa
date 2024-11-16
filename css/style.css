@@ -248,7 +248,7 @@ h1, h2, h3, h4, h5, h6, figure {
   display: -moz-inline-stack;
   display: inline-block;
   zoom: 1;
-  *display: inline;
+  display: inline;
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
@@ -665,13 +665,13 @@ input[type="text"] {
   display: -moz-inline-stack;
   display: inline-block;
   zoom: 1;
-  *display: inline;
+  display: inline;
 }
 .fh5co-social-icons li a {
   display: -moz-inline-stack;
   display: inline-block;
   zoom: 1;
-  *display: inline;
+  display: inline;
   color: #F95959;
   padding-left: 10px;
   padding-right: 10px;
@@ -1261,9 +1261,11 @@ input[type="text"] {
   }
   }
 
+
+  /* Portfolio Carousel Style */
   .carousel-item img {
     width: 100%;  /* Make sure image width is 100% of its container */
-    max-height: 400px; /* Set a maximum height for the image */
+    max-height: 700px; /* Set a maximum height for the image */
     object-fit: cover; /* Ensures image covers the area without distortion */
   }
 
@@ -1281,5 +1283,3 @@ input[type="text"] {
     font-size: 1.1rem;
     color: #6c757d;
   }
-
-/*# sourceMappingURL=style.css.map */
