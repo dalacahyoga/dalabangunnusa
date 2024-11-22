@@ -1305,3 +1305,10 @@ input[type="text"] {
 .portfolio-grid:hover .hover-text {
   opacity: 1;
 }
+
+/* Additional Hover Text "Open Portfolio" */
+@media (max-width: 768px) {
+  .portfolio-grid:active .hover-text {
+    opacity: 1;
+  }
+}
