@@ -1230,56 +1230,78 @@ input[type="text"] {
   cursor: pointer;
   z-index: 9999;  /* Agar berada di atas elemen lainnya */
   transition: transform 0.3s ease-in-out;
-  }
+}
   
-  /* Efek saat hover */
-  .whatsapp-floating:hover {
+/* Efek saat hover */
+.whatsapp-floating:hover {
   transform: scale(1.1); /* Membesar sedikit saat hover */
-  }
+}
   
-  /* Mengatur ikon */
-  .whatsapp-floating i {
+/* Mengatur ikon */
+.whatsapp-floating i {
   margin: 0;
-  }
+}
 
   /* Responsif untuk ukuran tablet dan perangkat mobile */
-  @media (max-width: 768px) {
-  .whatsapp-floating {
+@media (max-width: 768px) {
+.whatsapp-floating {
     bottom: 15px;  /* Mengurangi jarak bawah pada layar kecil */
     right: 15px;   /* Mengurangi jarak kanan pada layar kecil */
     padding: 12px; /* Mengurangi padding untuk ukuran lebih kecil */
     font-size: 22px; /* Menyesuaikan ukuran ikon */
   }
-  }
+}
 
-  @media (max-width: 480px) {
+@media (max-width: 480px) {
   .whatsapp-floating {
     bottom: 10px;  /* Lebih dekat ke bawah pada ponsel */
     right: 10px;   /* Lebih dekat ke kanan pada ponsel */
     padding: 10px; /* Padding lebih kecil */
     font-size: 20px; /* Ukuran ikon lebih kecil */
   }
-  }
+}
 
 
   /* Portfolio Carousel Style */
-  .carousel-item img {
-    width: 100%;  /* Make sure image width is 100% of its container */
-    max-height: 700px; /* Set a maximum height for the image */
-    object-fit: cover; /* Ensures image covers the area without distortion */
-  }
+.carousel-item img {
+  width: 100%;  /* Make sure image width is 100% of its container */
+  max-height: 700px; /* Set a maximum height for the image */
+  object-fit: cover; /* Ensures image covers the area without distortion */
+}
 
-  .room-description {
-    margin-top: 20px;
-    text-align: center;
-  }
+.room-description {
+  margin-top: 20px;
+  text-align: center;
+}
 
-  .room-title {
-    font-size: 2rem;
-    font-weight: bold;
-  }
+.room-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
 
-  .room-details {
-    font-size: 1.1rem;
-    color: #6c757d;
-  }
+.room-details {
+  font-size: 1.1rem;
+  color: #6c757d;
+}
+
+
+/* Additional Hover Text "Open Portfolio" */
+.portfolio-grid .hover-text {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  opacity: 0;
+  background-color: rgba(128, 128, 128, 0.7);
+  padding: 5px 10px; 
+  border-radius: 5px; 
+  transition: opacity 0.3s ease;
+}
+
+/* Additional Hover Text "Open Portfolio" */
+.portfolio-grid:hover .hover-text {
+  opacity: 1;
+}
