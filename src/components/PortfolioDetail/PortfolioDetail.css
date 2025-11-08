@@ -1,0 +1,280 @@
+/* Portfolio Gallery - Tiket.com Style */
+.portfolio-gallery-preview {
+  position: relative;
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+
+/* Desktop Gallery Grid */
+.portfolio-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 400px 200px;
+  gap: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Main Image (Top - Full Width) - Desktop Only */
+.portfolio-gallery-item:nth-child(1) {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+/* Bottom Row - 3 Images - Desktop Only */
+.portfolio-gallery-item:nth-child(2) {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.portfolio-gallery-item:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.portfolio-gallery-item:nth-child(4) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+/* Desktop: Hide photos 5+ (show only 4 in preview) */
+@media screen and (min-width: 769px) {
+  .portfolio-gallery-item:nth-child(n+5) {
+    display: none !important;
+  }
+}
+
+.portfolio-gallery-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #f5f5f5;
+  transition: all 0.3s ease;
+}
+
+.portfolio-gallery-item:hover {
+  filter: brightness(0.9);
+}
+
+.portfolio-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+/* View All Button Overlay (on 4th/last image) */
+.portfolio-gallery-item:nth-child(4) {
+  position: relative;
+}
+
+.view-all-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(100, 100, 100, 0.7); /* Abu transparan */
+  color: white;
+  padding: 10px 20px; /* Lebih kecil dari sebelumnya */
+  border-radius: 6px;
+  font-size: 13px; /* Lebih kecil */
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.view-all-overlay span {
+  text-transform: lowercase;
+}
+
+.view-all-overlay i {
+  font-size: 18px;
+}
+
+/* Simple Hover Effect - No Icon, Just Overlay */
+.gallery-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.portfolio-gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+/* Hide all icons */
+.gallery-overlay i,
+.gallery-overlay .zoom-icon {
+  display: none !important;
+}
+
+/* Room Description */
+.room-description {
+  margin-bottom: 30px;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.room-title {
+  font-size: 24px;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 8px;
+  font-family: 'Playfair Display', serif;
+}
+
+.room-description h4 {
+  font-size: 24px;
+  color: #000;
+  margin-bottom: 24px;
+  font-weight: 400;
+  font-family: 'Playfair Display', serif;
+}
+
+.room-details {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #666;
+  margin: 0;
+  text-align: left;
+  word-spacing: -0.05em;
+}
+
+/* Responsive */
+@media screen and (max-width: 992px) {
+  .portfolio-gallery {
+    grid-template-rows: 350px 180px;
+    gap: 6px;
+  }
+
+  .room-title {
+    font-size: 20px;
+  }
+
+  .room-description h4 {
+    font-size: 20px;
+  }
+
+  .view-all-overlay {
+    font-size: 13px;
+    padding: 12px 24px;
+    gap: 8px;
+  }
+}
+
+/* Mobile - Tiket.com Style: 1 large + 3 small in row */
+@media screen and (max-width: 768px) {
+  .portfolio-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 300px 100px; /* Large top, small bottom row */
+    gap: 6px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* Main Image (Top - Full Width) */
+  .portfolio-gallery-item:nth-child(1) {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    height: 100% !important;
+  }
+
+  /* Bottom Row - 3 Small Thumbnails */
+  .portfolio-gallery-item:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+    height: 100% !important;
+  }
+
+  .portfolio-gallery-item:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+    height: 100% !important;
+  }
+
+  .portfolio-gallery-item:nth-child(4) {
+    grid-column: 3;
+    grid-row: 2;
+    height: 100% !important;
+  }
+
+  /* Show View All button on mobile (4th image) */
+  .view-all-overlay {
+    display: flex !important;
+    font-size: 10px;
+    padding: 6px 10px; /* Lebih kecil */
+    background: rgba(100, 100, 100, 0.7); /* Abu transparan */
+  }
+
+  .view-all-overlay span {
+    font-size: 10px;
+    text-transform: lowercase;
+  }
+
+  .room-description {
+    padding: 20px;
+  }
+
+  .room-title {
+    font-size: 18px;
+  }
+
+  .room-description h4 {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .room-details {
+    font-size: 14px;
+    text-align: left;
+    line-height: 1.6;
+    word-spacing: -0.05em;
+  }
+
+}
+
+@media screen and (max-width: 480px) {
+  .portfolio-gallery {
+    grid-template-rows: 250px 80px; /* Smaller heights untuk mobile kecil */
+    gap: 4px;
+  }
+
+  .view-all-overlay {
+    font-size: 9px;
+    padding: 5px 8px; /* Lebih kecil */
+    background: rgba(100, 100, 100, 0.7); /* Abu transparan */
+  }
+
+  .view-all-overlay span {
+    font-size: 9px;
+    text-transform: lowercase;
+  }
+
+  .room-description {
+    padding: 15px;
+  }
+
+  .room-title {
+    font-size: 20px;
+  }
+}
+
