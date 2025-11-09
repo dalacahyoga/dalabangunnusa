@@ -9,6 +9,7 @@ Folder ini berisi semua dokumentasi teknis untuk proyek website PT. DaLa Bangun 
 - **[VISITOR_LOG_SETUP.md](./VISITOR_LOG_SETUP.md)** - Panduan setup sistem visitor log
 
 ### Deployment
+- **[RAILWAY_QUICK_START.md](./RAILWAY_QUICK_START.md)** - 🚂 Panduan cepat deploy backend ke Railway.app
 - **[RENDER_QUICK_START.md](./RENDER_QUICK_START.md)** - ⭐ Panduan cepat deploy backend ke Render.com (Recommended - Free Forever)
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Panduan lengkap deployment ke semua platform (Hostinger, Netlify, Railway, Render)
 - **[DEPLOY_CHECKLIST.md](./DEPLOY_CHECKLIST.md)** - Checklist untuk memastikan deployment berjalan dengan baik

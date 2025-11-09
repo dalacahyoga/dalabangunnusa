@@ -19,36 +19,63 @@ Panduan deployment untuk 2 case:
 
 ### Step 1: Deploy Backend ke VPS Free
 
-#### A. Menggunakan Railway.app (Recommended)
+#### A. Menggunakan Railway.app
+
+⚠️ **Note**: Railway free tier memberikan $5 credit per bulan. Setelah habis, service akan pause.
 
 1. **Buat Akun Railway**
    - Kunjungi https://railway.app
-   - Sign up dengan GitHub
+   - Sign up dengan GitHub (recommended) atau email
+   - Authorize Railway untuk akses GitHub
 
 2. **Create New Project**
    - Klik "New Project"
    - Pilih "Deploy from GitHub repo"
-   - Pilih repository Anda
+   - Pilih repository `dalabangunnusa`
+   - Railway akan otomatis detect project
 
-3. **Configure Environment Variables**
-   - Di Railway dashboard, pilih project
-   - Klik "Variables" tab
-   - Tambahkan:
+3. **Configure Service**
+   - Railway akan auto-detect dari `package.json` dan `railway.json`
+   - **Build Command**: `npm install` (auto-detect)
+   - **Start Command**: `npm start` (auto-detect)
+   - Jika perlu manual: Settings → Build & Deploy
+
+4. **Set Environment Variables**
+   - Di service dashboard, klik "Variables" tab
+   - Klik "New Variable", tambahkan:
      ```
+     NODE_ENV=production
      PORT=3001
      ALLOWED_ORIGINS=https://your-hostinger-domain.com
-     NODE_ENV=production
      ```
+   - **Catatan**: 
+     - Ganti `your-hostinger-domain.com` dengan domain Hostinger Anda
+     - Jika juga pakai Netlify: `ALLOWED_ORIGINS=https://your-hostinger-domain.com,https://your-netlify.netlify.app`
 
-4. **Configure Service**
-   - Railway akan auto-detect `package.json`
-   - Pastikan start command: `npm start`
-   - Railway akan otomatis deploy
+5. **Deploy**
+   - Railway akan otomatis deploy setelah connect repository
+   - Atau klik "Deploy" button untuk manual deploy
+   - Tunggu sampai status "Active" (hijau)
+   - Build pertama: ~3-5 menit
 
-5. **Get Backend URL**
-   - Setelah deploy, Railway akan memberikan URL
-   - Contoh: `https://your-app.railway.app`
-   - Backend API: `https://your-app.railway.app/api`
+6. **Get Backend URL**
+   - Di service dashboard, klik "Settings" tab
+   - Scroll ke "Domains" section
+   - Railway akan generate domain: `https://your-service-name.up.railway.app`
+   - Backend API: `https://your-service-name.up.railway.app/api`
+   - **Simpan URL ini** untuk konfigurasi frontend
+
+7. **Test Backend**
+   - Buka: `https://your-service-name.up.railway.app/api/health`
+   - Harus return: `{"status":"ok","timestamp":"..."}`
+   - Jika error, check logs di "Deployments" tab
+
+8. **Free Tier Note**
+   - Railway memberikan $5 credit gratis per bulan
+   - Setelah credit habis, service akan pause
+   - Credit reset setiap bulan
+   - Monitor usage di "Usage" tab
+   - **Lihat `docs/RAILWAY_QUICK_START.md` untuk detail lengkap**
 
 #### B. Menggunakan Render.com (Recommended - Free Forever)
 
