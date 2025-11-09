@@ -1,0 +1,15 @@
+{
+  "portfolio": {
+    "title": "Our Portfolio",
+    "description": "Explore our collection of projects, where design and craftsmanship create lasting impact."
+  },
+  "contact": {
+    "title": "Contact Information",
+    "address": "Jl. Raya Bilukan No.95, Sebatu, Kec. Tegallalang, Kabupaten Gianyar, Bali 80561",
+    "phone": "+62 8133 8506 799",
+    "email": "dalabangunnusa@gmail.com",
+    "facebook": "https://www.facebook.com/profile.php?id=61568370484842",
+    "instagram": "https://www.instagram.com/dalabangunnusa/",
+    "mapUrl": "https://www.google.com/maps?q=Jl.+Raya+Bilukan+No.95,+Sebatu,+Kec.+Tegallalang,+Kabupaten+Gianyar,+Bali+80561&output=embed"
+  }
+}

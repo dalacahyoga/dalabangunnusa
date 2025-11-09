@@ -1,7 +1,31 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import AnimateBox from '../components/AnimateBox/AnimateBox'
+import { getPageContent } from '../utils/contentLoader'
 
 const Contact = () => {
+  const [content, setContent] = useState(null)
+
+  useEffect(() => {
+    const loadContent = async () => {
+      const pageContent = await getPageContent('contact')
+      if (pageContent) {
+        setContent(pageContent)
+      } else {
+        setContent({
+          title: 'Contact Information',
+          address: 'Jl. Raya Bilukan No.95, Sebatu, Kec. Tegallalang, Kabupaten Gianyar, Bali 80561',
+          phone: '+62 8133 8506 799',
+          email: 'dalabangunnusa@gmail.com',
+          facebook: 'https://www.facebook.com/profile.php?id=61568370484842',
+          instagram: 'https://www.instagram.com/dalabangunnusa/',
+          mapUrl: 'https://www.google.com/maps?q=Jl.+Raya+Bilukan+No.95,+Sebatu,+Kec.+Tegallalang,+Kabupaten+Gianyar,+Bali+80561&output=embed'
+        })
+      }
+    }
+    loadContent()
+  }, [])
+
   return (
     <div className="container">
       <div>
@@ -11,24 +35,28 @@ const Contact = () => {
       <div id="fh5co-contact" className="contact-page-top">
         <div className="row">
           <AnimateBox className="col-md-12">
-            <h3 className="text-center">Contact Information</h3>
+            <h3 className="text-center">{content?.title || 'Contact Information'}</h3>
             <ul className="contact-info">
               <li>
                 <i className="icon-location4"></i>
-                <span>Jl. Raya Bilukan No.95, Sebatu, Kec. Tegallalang, Kabupaten Gianyar, Bali 80561</span>
+                <span>{content?.address || 'Jl. Raya Bilukan No.95, Sebatu, Kec. Tegallalang, Kabupaten Gianyar, Bali 80561'}</span>
               </li>
               <li>
                 <i className="icon-phone3"></i>
-                <a href="tel://081338506799">+62 8133 8506 799</a>
+                <a href={`tel://${content?.phone?.replace(/[^0-9]/g, '') || '081338506799'}`}>
+                  {content?.phone || '+62 8133 8506 799'}
+                </a>
               </li>
               <li>
-                <i className="icon-envelope"></i>
-                <a href="mailto:dalabangunnusa@gmail.com">dalabangunnusa@gmail.com</a>
+                <i className="icon-mail2"></i>
+                <a href={`mailto:${content?.email || 'dalabangunnusa@gmail.com'}`}>
+                  {content?.email || 'dalabangunnusa@gmail.com'}
+                </a>
               </li>
               <li>
-                <i className="icon-facebook"></i>
+                <i className="icon-facebook2"></i>
                 <a
-                  href="https://www.facebook.com/profile.php?id=61568370484842"
+                  href={content?.facebook || 'https://www.facebook.com/profile.php?id=61568370484842'}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -38,7 +66,7 @@ const Contact = () => {
               <li>
                 <i className="icon-instagram"></i>
                 <a
-                  href="https://www.instagram.com/dalabangunnusa/"
+                  href={content?.instagram || 'https://www.instagram.com/dalabangunnusa/'}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -54,7 +82,7 @@ const Contact = () => {
           <AnimateBox className="col-md-12">
             <div className="map-container">
               <iframe
-                src="https://www.google.com/maps?q=Jl.+Raya+Bilukan+No.95,+Sebatu,+Kec.+Tegallalang,+Kabupaten+Gianyar,+Bali+80561&output=embed"
+                src={content?.mapUrl || 'https://www.google.com/maps?q=Jl.+Raya+Bilukan+No.95,+Sebatu,+Kec.+Tegallalang,+Kabupaten+Gianyar,+Bali+80561&output=embed'}
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

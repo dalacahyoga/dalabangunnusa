@@ -35,7 +35,7 @@ const PortfolioDetail = ({ title, year, location, description, images }) => {
         {/* Project Info */}
         <div className="room-description">
           <h2 className="room-title">{title}</h2>
-          <h4>{location} ({year})</h4>
+          <h4>{location} <span className="portfolio-year">({year})</span></h4>
           <p className="room-details">{description}</p>
         </div>
 
@@ -56,6 +56,7 @@ const PortfolioDetail = ({ title, year, location, description, images }) => {
                 {index === 3 && images.length > 4 && (
                   <div className="view-all-overlay">
                     <span>see all photo</span>
+                    <span className="photo-count">+{images.length - 4}</span>
                   </div>
                 )}
               </div>

@@ -29,10 +29,14 @@ dalabangunnusa/
 │   ├── utils/               # Utility functions
 │   ├── App.jsx              # Main app component with routes
 │   └── main.jsx             # Application entry point
+├── docs/                     # Documentation files
+│   ├── DEPLOYMENT.md        # Deployment guide
+│   ├── ENV_SETUP.md         # Environment setup
+│   ├── VISITOR_LOG_SETUP.md # Visitor log setup
+│   └── ...                  # Other documentation
 ├── netlify/                  # Netlify serverless functions
 ├── server.js                 # Express API server
 ├── netlify.toml             # Netlify configuration
-├── DEPLOYMENT.md            # Deployment guide
 └── package.json             # Dependencies and scripts
 ```
 
@@ -67,24 +71,32 @@ Build output akan berada di folder `dist/`.
 
 ## Deployment
 
-Website ini dapat di-deploy ke:
-- **Netlify** - Static site hosting
-- **Hostinger** - Shared hosting dengan Apache
+Website ini dapat di-deploy dengan 2 opsi:
 
-Lihat `DEPLOYMENT.md` untuk panduan lengkap deployment.
+### OPSI A: FE di Hostinger + BE di VPS Free
+- **Frontend**: Hostinger (static hosting)
+- **Backend**: VPS Free (Railway, Render, dll)
+
+### OPSI B: FE di Netlify + BE di VPS Free
+- **Frontend**: Netlify (static hosting)
+- **Backend**: VPS Free (Railway, Render, dll)
+
+**Lihat `docs/DEPLOYMENT.md` untuk panduan lengkap deployment.**
 
 ### Quick Deploy
 
-**Netlify:**
-1. Connect repository ke Netlify
-2. Build command: `npm run build`
-3. Publish directory: `dist`
-4. Set environment variable: `VITE_API_URL`
+**OPSI A - Hostinger:**
+1. Deploy backend ke Railway/Render (lihat `docs/DEPLOYMENT.md`)
+2. Build: `npm run build` atau `./build-production.sh hostinger`
+3. Upload semua file dari `dist/` ke Hostinger `public_html/`
+4. Set environment variable `VITE_API_URL` di build
 
-**Hostinger:**
-1. Build project: `npm run build`
-2. Upload semua file dari `dist/` ke `public_html/`
-3. Upload `.htaccess` dari `public/.htaccess` ke `public_html/`
+**OPSI B - Netlify:**
+1. Deploy backend ke Railway/Render (lihat `docs/DEPLOYMENT.md`)
+2. Connect repository ke Netlify
+3. Build command: `npm run build`
+4. Publish directory: `dist`
+5. Set environment variable: `VITE_API_URL=https://your-backend-url.com/api`
 
 ## Features
 
@@ -103,15 +115,27 @@ Lihat `DEPLOYMENT.md` untuk panduan lengkap deployment.
 - `/portfolio/:id` - Portfolio Detail
 - `/contact` - Contact Us
 - `/dcg-login` - Admin Login
-- `/dcg` - Admin Dashboard (Protected)
+- `/dcg-visitor` - Visitor Log (Protected)
+- `/dcg-content` - Content Management (Protected)
 
 ## Environment Variables
 
+### Development
 Create `.env` file:
 ```env
 VITE_API_URL=http://localhost:3001/api
 PORT=3001
 ```
+
+### Production
+Lihat `env.example.txt` untuk contoh konfigurasi production.
+
+**Backend (VPS):**
+- `PORT=3001` - Server port
+- `ALLOWED_ORIGINS=https://your-domain.com,https://your-netlify.netlify.app` - CORS origins
+
+**Frontend:**
+- `VITE_API_URL=https://your-backend-url.com/api` - Backend API URL
 
 ## License
 

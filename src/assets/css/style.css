@@ -618,20 +618,12 @@ h1, h2, h3, h4, h5, h6, figure {
     gap: 30px;
     padding: 0 15px;
     margin: 0 -15px;
-    /* Show scrollbar on mobile */
-    scrollbar-width: thin;
-    scrollbar-color: #4A4A4A transparent;
+    /* Hide scrollbar on mobile (same as desktop) */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
   }
   .clients-logo-container::-webkit-scrollbar {
-    display: block;
-    height: 6px;
-  }
-  .clients-logo-container::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .clients-logo-container::-webkit-scrollbar-thumb {
-    background-color: #4A4A4A;
-    border-radius: 3px;
+    display: none; /* Chrome, Safari, Opera */
   }
 }
 
@@ -775,6 +767,14 @@ h1, h2, h3, h4, h5, h6, figure {
   font-size: 18px;
 }
 
+/* About page - Ensure all description paragraphs have same font size as Home page */
+#fh5co-contact .principal-content .detail p,
+#fh5co-contact .col-md-6 p,
+#fh5co-contact .detail p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
 .form-wrap {
   padding: 3em;
   background: rgba(255, 255, 255, 0.8);
@@ -803,10 +803,33 @@ h1, h2, h3, h4, h5, h6, figure {
   position: absolute;
   top: 0.15em; /* Presisi vertical alignment */
   left: 0;
-  font-size: 18px;
+  font-size: 18px !important;
   color: #4A4A4A;
   width: 20px; /* Fixed width untuk alignment presisi */
   text-align: center; /* Center icon dalam width */
+  line-height: 1; /* Ensure consistent line height */
+  display: inline-block; /* Ensure consistent display */
+}
+/* Ensure all contact icons have same size */
+.contact-info li .icon-location4,
+.contact-info li .icon-phone3,
+.contact-info li .icon-envelope,
+.contact-info li .icon-mail,
+.contact-info li .icon-mail2,
+.contact-info li .icon-mail3,
+.contact-info li .icon-mail4,
+.contact-info li .icon-mail5,
+.contact-info li .icon-mail6,
+.contact-info li .icon-google,
+.contact-info li .icon-google2,
+.contact-info li .icon-google3,
+.contact-info li .icon-facebook,
+.contact-info li .icon-facebook2,
+.contact-info li .icon-facebook22,
+.contact-info li .icon-instagram {
+  font-size: 18px !important;
+  width: 20px !important;
+  line-height: 1 !important;
 }
 /* Icon lokasi di tengah vertikal untuk multi-line text */
 .contact-info li .icon-location4 {
@@ -1447,6 +1470,94 @@ input[type="text"] {
   .padding-left {
     padding-left: 0 !important;
   }
+  
+  /* Portfolio layout - Mobile: Show single column, Desktop: Hide */
+  .portfolio-mobile {
+    display: block !important;
+  }
+  
+  .portfolio-desktop-left,
+  .portfolio-desktop-right {
+    display: none !important;
+  }
+}
+
+/* Desktop: Show two columns, hide mobile single column */
+@media screen and (min-width: 769px) {
+  .portfolio-mobile {
+    display: none !important;
+  }
+  
+  .portfolio-desktop-left,
+  .portfolio-desktop-right {
+    display: block !important;
+  }
+}
+
+/* Principal section - About Principal text align left (override center for other detail spans) */
+.principal-content .detail span {
+  text-align: left !important;
+  margin-bottom: 10px !important; /* Reduce spacing between "About Principal" and "I Wayan Selamet" */
+}
+
+/* Principal social media icons - use same styling as footer */
+.principal-content .fh5co-social-icons {
+  margin-top: 20px;
+}
+
+/* Mobile: Hide desktop social media, show mobile version below photo */
+.principal-social-media-mobile {
+  display: none;
+  margin-top: 0;
+}
+
+/* Desktop: Hide mobile social media */
+@media screen and (min-width: 769px) {
+  .principal-social-media-mobile {
+    display: none !important;
+  }
+}
+
+/* Principal section - Mobile: Photo after description */
+@media screen and (max-width: 768px) {
+  .principal-section {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .principal-image {
+    order: 2; /* Photo comes after description on mobile */
+    margin-top: -10px;
+    max-width: 300px; /* Slightly larger photo on mobile */
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .principal-image .image-item {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .principal-content {
+    order: 1; /* Content comes first on mobile */
+  }
+  
+  /* Hide desktop social media on mobile */
+  .principal-content .fh5co-social-icons {
+    display: none !important;
+  }
+  
+  /* Show mobile social media below photo, centered */
+  .principal-social-media-mobile {
+    display: block !important;
+    margin-top: -20px;
+    text-align: center;
+  }
 }
 
 .fh5co-loader {
@@ -1553,8 +1664,8 @@ input[type="text"] {
 }
 
 .room-details {
-  font-size: 1.1rem;
-  color: #6c757d;
+  font-size: 14px !important;
+  color: #767676;
 }
 
 

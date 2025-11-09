@@ -97,6 +97,12 @@
   text-transform: lowercase;
 }
 
+.view-all-overlay .photo-count {
+  margin-left: 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
 .view-all-overlay i {
   font-size: 18px;
 }
@@ -142,20 +148,27 @@
 }
 
 .room-description h4 {
-  font-size: 24px;
+  font-size: 20px;
   color: #000;
   margin-bottom: 24px;
   font-weight: 400;
   font-family: 'Playfair Display', serif;
 }
 
+.room-description h4 .portfolio-year {
+  font-family: "Open Sans", arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
 .room-details {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.7;
-  color: #666;
+  color: #767676;
   margin: 0;
   text-align: left;
-  word-spacing: -0.05em;
+  font-family: "Open Sans", arial, sans-serif;
+  font-weight: 400;
 }
 
 /* Responsive */
@@ -239,15 +252,14 @@
   }
 
   .room-description h4 {
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 20px;
   }
 
   .room-details {
     font-size: 14px;
     text-align: left;
-    line-height: 1.6;
-    word-spacing: -0.05em;
+    line-height: 1.7;
   }
 
 }

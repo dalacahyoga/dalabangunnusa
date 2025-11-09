@@ -1,63 +1,67 @@
 import { Link } from 'react-router-dom'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AnimateBox from '../components/AnimateBox/AnimateBox'
+import { getPageContent } from '../utils/contentLoader'
 
 const Home = () => {
   const clientsContainerRef = useRef(null)
-  const portfolios = [
-    {
-      id: 1,
-      title: 'ABIANTAKSU VILLA',
-      location: 'Gianyar, Bali',
-      image: '/images/portfolio/thumbnail/1.abiantaksu.jpg',
-      link: '/portfolio/abiantaksu',
-    },
-    {
-      id: 2,
-      title: 'ABIANSILA',
-      location: 'Gianyar, Bali',
-      image: '/images/portfolio/thumbnail/2.abiansilla.jpg',
-      link: '/portfolio/abiansilla',
-    },
-    {
-      id: 3,
-      title: 'CRETYA UBUD BALI',
-      location: 'Gianyar, Bali',
-      image: '/images/portfolio/thumbnail/3.cretya.jpeg',
-      link: '/portfolio/cretyaubud',
-    },
-    {
-      id: 4,
-      title: 'KINI SEBATU VILLA',
-      location: 'Gianyar, Bali',
-      image: '/images/portfolio/thumbnail/5.kinivilla.jpg',
-      link: '/portfolio/kinisebatu',
-    },
-    {
-      id: 5,
-      title: 'HOSTEL FILOW IN UBUD',
-      location: 'Gianyar, Bali',
-      image: '/images/portfolio/thumbnail/4.fillowubud.jpg',
-      link: '/portfolio/filowubud',
-    },
-    {
-      id: 6,
-      title: 'KUBER DAY CLUB',
-      location: 'Gianyar, Bali',
-      image: '/images/portfolio/thumbnail/6.kuberdayclub.jpg',
-      link: '/portfolio/kuberdayclub',
-    },
-    {
-      id: 7,
-      title: 'SAM POO KONG',
-      location: 'Semarang, Central Java',
-      image: '/images/portfolio/thumbnail/7.sampookong.jpg',
-      link: '/portfolio/sampookong',
-    },
-  ]
+  const [content, setContent] = useState(null)
 
-  const leftPortfolios = portfolios.filter((p) => [1, 2, 3].includes(p.id))
-  const rightPortfolios = portfolios.filter((p) => [4, 5, 6, 7].includes(p.id))
+  // Load content from API
+  useEffect(() => {
+    const loadContent = async () => {
+      const pageContent = await getPageContent('home')
+      if (pageContent) {
+        setContent(pageContent)
+      } else {
+        // Fallback to default content
+        setContent({
+          title: 'Best showcase for architecture',
+          description: 'PT. DaLa Bangun Nusa, an experienced architecture and construction company since 2015, formerly an individual contractor by I Wayan Selamet, S.T. since 1991. We specialize in designing and building temples, villas, pool bars, and restaurants. Let us bring your vision to life with expert craftsmanship and lasting results.',
+          tagline: 'Inspired by Bali, Designed for the Sacred.',
+          portfolioButtonText: 'View More Our Portfolio',
+          portfolioDescription: 'Explore our collection of projects, where design and craftsmanship create lasting impact.',
+          clientsTitle: 'Our Clients',
+          clientsDescription: 'We are proud to have collaborated with leading businesses, delivering architectural solutions that exceed expectations and create lasting value.'
+        })
+      }
+    }
+    loadContent()
+  }, [])
+
+  // Load portfolios from API
+  const [portfolios, setPortfolios] = useState([])
+
+  useEffect(() => {
+    const loadPortfolios = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
+        const response = await fetch(`${apiUrl}/portfolios`)
+        if (response.ok) {
+          const data = await response.json()
+          // Transform data to match the expected format
+          const formattedPortfolios = data.map((p) => ({
+            id: p.id,
+            title: p.title,
+            location: `${p.location}${p.year ? ` (${p.year})` : ''}`,
+            image: p.thumbnail || '/images/portfolio/thumbnail/default.jpg',
+            link: `/portfolio/${p.slug}`,
+          }))
+          setPortfolios(formattedPortfolios)
+        }
+      } catch (error) {
+        console.error('Error loading portfolios:', error)
+        // Fallback to empty array if API fails
+        setPortfolios([])
+      }
+    }
+    loadPortfolios()
+  }, [])
+
+  // Desktop: Split by even/odd index (alternating columns)
+  // Mobile: Will show in order (no change needed)
+  const leftPortfolios = portfolios.filter((_, index) => index % 2 === 0) // Even indices: 0, 2, 4, 6...
+  const rightPortfolios = portfolios.filter((_, index) => index % 2 === 1) // Odd indices: 1, 3, 5...
 
   // Logo clients data
   const clientLogos = [
@@ -182,16 +186,13 @@ const Home = () => {
           <div className="row">
             <div className="col-md-8 col-md-offset-2 col-md-pull-2">
               <h2>
-                Best showcase for architecture <span></span>
+                {content?.title || 'Best showcase for architecture'} <span></span>
               </h2>
               <p>
-                PT. DaLa Bangun Nusa, an experienced architecture and
-                construction since 2015. Specialize in designing and building
-                temples, villas, pool bars, and restaurants. Let us bring your
-                vision to life with expert craftsmanship and lasting results.
+                {content?.description || 'PT. DaLa Bangun Nusa, an experienced architecture and construction since 2015. Specialize in designing and building temples, villas, pool bars, and restaurants. Let us bring your vision to life with expert craftsmanship and lasting results.'}
                 <br />
                 <br />
-                <strong>&quot;Inspired by Bali, Designed for the Sacred.&quot;</strong>
+                <strong>&quot;{content?.tagline || 'Inspired by Bali, Designed for the Sacred.'}&quot;</strong>
               </p>
             </div>
           </div>
@@ -200,8 +201,32 @@ const Home = () => {
 
       <div id="fh5co-portfolio">
         <div className="row nopadding">
-          {/* Right Portfolio */}
-          <div className="col-md-6 padding-right">
+          {/* Mobile: Single column - show all portfolios in order */}
+          <div className="col-xs-12 col-sm-12 col-md-6 padding-right portfolio-mobile">
+            <div className="row">
+              {portfolios.map((portfolio) => (
+                <div key={portfolio.id} className="col-md-12">
+                  <AnimateBox>
+                    <Link to={portfolio.link} className="portfolio-grid">
+                      <img
+                        src={portfolio.image}
+                        className="img-responsive"
+                        alt={portfolio.title}
+                      />
+                      <div className="hover-text">Open Portfolio</div>
+                      <div className="desc">
+                        <h3>{portfolio.title}</h3>
+                        <span>{portfolio.location}</span>
+                      </div>
+                    </Link>
+                  </AnimateBox>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop: Two columns - Left Portfolio (even indices) */}
+          <div className="col-md-6 padding-right portfolio-desktop-left">
             <div className="row">
               {leftPortfolios.map((portfolio) => (
                 <div key={portfolio.id} className="col-md-12">
@@ -224,8 +249,8 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Left Portfolio */}
-          <div className="col-md-6 padding-left">
+          {/* Desktop: Two columns - Right Portfolio (odd indices) */}
+          <div className="col-md-6 padding-left portfolio-desktop-right">
             <div className="row">
               {rightPortfolios.map((portfolio) => (
                 <div key={portfolio.id} className="col-md-12">
@@ -253,12 +278,11 @@ const Home = () => {
       <div className="col-md-12 text-center">
         <p>
           <Link to="/portfolio" className="btn btn-primary btn-demo">
-            View More Our Portfolio
+            {content?.portfolioButtonText || 'View More Our Portfolio'}
           </Link>
         </p>
         <p>
-          Explore our collection of projects, where design and craftsmanship
-          create lasting impact.
+          {content?.portfolioDescription || 'Explore our collection of projects, where design and craftsmanship create lasting impact.'}
         </p>
       </div>
 
@@ -268,10 +292,10 @@ const Home = () => {
           <div className="row">
             <div className="col-md-8 col-md-offset-2">
               <h2>
-                Our Clients <span></span>
+                {content?.clientsTitle || 'Our Clients'} <span></span>
               </h2>
               <p>
-                We are proud to have collaborated with leading businesses, delivering architectural solutions that exceed expectations and create lasting value.
+                {content?.clientsDescription || 'We are proud to have collaborated with leading businesses, delivering architectural solutions that exceed expectations and create lasting value.'}
               </p>
             </div>
           </div>

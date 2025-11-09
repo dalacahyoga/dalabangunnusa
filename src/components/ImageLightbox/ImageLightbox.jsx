@@ -6,28 +6,55 @@ const ImageLightbox = ({ images, currentIndex, onClose, onNext, onPrev }) => {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const imageRef = useRef(null)
   const containerRef = useRef(null)
+  const touchStartX = useRef(null)
+  const touchStartY = useRef(null)
+
+  // Check if fullscreen API is available
+  const isFullscreenAPIAvailable = () => {
+    return !!(
+      document.fullscreenEnabled ||
+      document.webkitFullscreenEnabled ||
+      document.mozFullScreenEnabled ||
+      document.msFullscreenEnabled
+    )
+  }
 
   const enterFullscreen = () => {
     const element = containerRef.current
-    if (element) {
+    if (!element) return
+
+    // Try native fullscreen API first
+    if (isFullscreenAPIAvailable()) {
       if (element.requestFullscreen) {
-        element.requestFullscreen()
+        element.requestFullscreen().catch(err => {
+          console.log('Fullscreen error:', err)
+          // Fallback to CSS fullscreen
+          setIsFullscreen(true)
+        })
       } else if (element.webkitRequestFullscreen) {
         element.webkitRequestFullscreen()
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen()
       } else if (element.msRequestFullscreen) {
         element.msRequestFullscreen()
       }
+    } else {
+      // Mobile fallback: Use CSS fullscreen
       setIsFullscreen(true)
     }
   }
 
   const exitFullscreen = () => {
-    if (document.exitFullscreen) {
-      document.exitFullscreen()
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen()
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen()
+    if (isFullscreenAPIAvailable()) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen()
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen()
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen()
+      }
     }
     setIsFullscreen(false)
   }
@@ -47,6 +74,9 @@ const ImageLightbox = ({ images, currentIndex, onClose, onNext, onPrev }) => {
   useEffect(() => {
     // Disable body scroll when lightbox is open
     document.body.style.overflow = 'hidden'
+    // Prevent scrolling on mobile
+    document.body.style.position = 'fixed'
+    document.body.style.width = '100%'
 
     // Handle keyboard navigation
     const handleKeyDown = (e) => {
@@ -65,6 +95,8 @@ const ImageLightbox = ({ images, currentIndex, onClose, onNext, onPrev }) => {
 
     return () => {
       document.body.style.overflow = 'unset'
+      document.body.style.position = 'unset'
+      document.body.style.width = 'unset'
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [onClose, onNext, onPrev, isFullscreen])
@@ -74,28 +106,78 @@ const ImageLightbox = ({ images, currentIndex, onClose, onNext, onPrev }) => {
     setIsZoomed(false)
   }, [currentIndex])
 
+  // Touch swipe handlers for mobile
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+
+  const handleTouchEnd = (e) => {
+    if (!touchStartX.current || !touchStartY.current) return
+
+    const touchEndX = e.changedTouches[0].clientX
+    const touchEndY = e.changedTouches[0].clientY
+    const diffX = touchStartX.current - touchEndX
+    const diffY = touchStartY.current - touchEndY
+
+    // Only handle horizontal swipes (ignore if vertical swipe is larger)
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+      if (diffX > 0) {
+        // Swipe left - next image
+        onNext()
+      } else {
+        // Swipe right - previous image
+        onPrev()
+      }
+    }
+
+    touchStartX.current = null
+    touchStartY.current = null
+  }
+
   // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement)
+      const isFullscreenActive = !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+      )
+      setIsFullscreen(isFullscreenActive)
     }
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange)
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
-    document.addEventListener('msfullscreenchange', handleFullscreenChange)
+    if (isFullscreenAPIAvailable()) {
+      document.addEventListener('fullscreenchange', handleFullscreenChange)
+      document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
+      document.addEventListener('mozfullscreenchange', handleFullscreenChange)
+      document.addEventListener('msfullscreenchange', handleFullscreenChange)
+    }
 
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange)
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
-      document.removeEventListener('msfullscreenchange', handleFullscreenChange)
+      if (isFullscreenAPIAvailable()) {
+        document.removeEventListener('fullscreenchange', handleFullscreenChange)
+        document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+        document.removeEventListener('mozfullscreenchange', handleFullscreenChange)
+        document.removeEventListener('msfullscreenchange', handleFullscreenChange)
+      }
     }
   }, [])
 
   if (currentIndex === null) return null
 
   return (
-    <div className="lightbox-overlay" onClick={onClose}>
-      <div className="lightbox-container" ref={containerRef} onClick={(e) => e.stopPropagation()}>
+    <div 
+      className={`lightbox-overlay ${isFullscreen ? 'fullscreen-active' : ''}`} 
+      onClick={onClose}
+    >
+      <div 
+        className={`lightbox-container ${isFullscreen ? 'fullscreen-active' : ''}`}
+        ref={containerRef} 
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Close Button */}
         <button className="lightbox-close" onClick={onClose} aria-label="Close">
           <i className="icon-close"></i>

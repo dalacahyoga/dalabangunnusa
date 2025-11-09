@@ -13,7 +13,7 @@ const Login = () => {
   useEffect(() => {
     const isAuthenticated = sessionStorage.getItem('dcg_authenticated') === 'true'
     if (isAuthenticated) {
-      navigate('/dcg', { replace: true })
+      navigate('/dcg-visitor', { replace: true })
     }
   }, [navigate])
 
@@ -30,8 +30,8 @@ const Login = () => {
       sessionStorage.setItem('dcg_authenticated', 'true')
       sessionStorage.setItem('dcg_username', username)
       
-      // Redirect to intended page or /dcg
-      const from = location.state?.from?.pathname || '/dcg'
+      // Redirect to intended page or /dcg-visitor
+      const from = location.state?.from?.pathname || '/dcg-visitor'
       navigate(from, { replace: true })
     } else {
       setError('Invalid username or password')

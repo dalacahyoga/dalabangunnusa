@@ -5,15 +5,11 @@ import About from './pages/About'
 import Portfolio from './pages/Portfolio'
 import Contact from './pages/Contact'
 import VisitorLog from './pages/administrator/VisitorLog'
+import ContentManagement from './pages/administrator/ContentManagement'
+import PortfolioManagement from './pages/administrator/PortfolioManagement'
 import Login from './pages/administrator/Login'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-import AbianTaksu from './pages/portfolio/AbianTaksu'
-import AbianSilla from './pages/portfolio/AbianSilla'
-import CretyaUbud from './pages/portfolio/CretyaUbud'
-import FilowUbud from './pages/portfolio/FilowUbud'
-import KiniSebatu from './pages/portfolio/KiniSebatu'
-import KuberDayClub from './pages/portfolio/KuberDayClub'
-import SampooKong from './pages/portfolio/SampooKong'
+import PortfolioDetailPage from './pages/PortfolioDetailPage'
 
 function App() {
   return (
@@ -23,22 +19,34 @@ function App() {
         <Route path="about" element={<About />} />
         <Route path="portfolio" element={<Portfolio />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="portfolio/abiantaksu" element={<AbianTaksu />} />
-        <Route path="portfolio/abiansilla" element={<AbianSilla />} />
-        <Route path="portfolio/cretyaubud" element={<CretyaUbud />} />
-        <Route path="portfolio/filowubud" element={<FilowUbud />} />
-        <Route path="portfolio/kinisebatu" element={<KiniSebatu />} />
-        <Route path="portfolio/kuberdayclub" element={<KuberDayClub />} />
-        <Route path="portfolio/sampookong" element={<SampooKong />} />
+        <Route path="portfolio/:slug" element={<PortfolioDetailPage />} />
       </Route>
       {/* Login page for visitor log access */}
       <Route path="/dcg-login" element={<Login />} />
       {/* Hidden visitor log page - protected route, no layout */}
       <Route
-        path="/dcg"
+        path="/dcg-visitor"
         element={
           <ProtectedRoute>
             <VisitorLog />
+          </ProtectedRoute>
+        }
+      />
+      {/* Content management page - protected route, no layout */}
+      <Route
+        path="/dcg-content"
+        element={
+          <ProtectedRoute>
+            <ContentManagement />
+          </ProtectedRoute>
+        }
+      />
+      {/* Portfolio management page - protected route, no layout */}
+      <Route
+        path="/dcg-portfolio"
+        element={
+          <ProtectedRoute>
+            <PortfolioManagement />
           </ProtectedRoute>
         }
       />

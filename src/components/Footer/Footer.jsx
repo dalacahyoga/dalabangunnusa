@@ -19,7 +19,7 @@ const Footer = () => {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <i className="icon-facebook"></i>
+                    <i className="icon-facebook2"></i>
                   </a>
                 </li>
                 <li>

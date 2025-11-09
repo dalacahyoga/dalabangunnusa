@@ -31,7 +31,7 @@ const Layout = () => {
   // Log visitor on route change
   useEffect(() => {
     // Skip logging for the visitor log page itself
-    if (location.pathname !== '/dcg') {
+    if (location.pathname !== '/dcg-visitor' && location.pathname !== '/dcg-content') {
       const pageName = location.pathname === '/' ? 'Home' : location.pathname
       logVisitor(pageName)
     }

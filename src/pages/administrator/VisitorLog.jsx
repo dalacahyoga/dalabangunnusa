@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getVisitorLogs, clearVisitorLogs, getVisitorStats } from '../../utils/visitorLogger'
+import AdminNavbar from '../../components/AdminNavbar/AdminNavbar'
 import './VisitorLog.css'
 
 const VisitorLog = () => {
@@ -33,11 +34,6 @@ const VisitorLog = () => {
     }
   }
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('dcg_authenticated')
-    sessionStorage.removeItem('dcg_username')
-    navigate('/dcg-login', { replace: true })
-  }
 
   const filteredLogs = logs.filter((log) => {
     // Filter by date
@@ -105,15 +101,13 @@ const VisitorLog = () => {
 
   return (
     <div className="visitor-log-container">
+      <AdminNavbar />
+      
       <div className="visitor-log-header">
         <div className="header-content">
           <div>
-            <h1>Administrator</h1>
-            <p className="visitor-log-subtitle">Access Log for PT. DaLa Bangun Nusa Website</p>
+            <h1>Visitor Log</h1>
           </div>
-          <button className="logout-button" onClick={handleLogout}>
-            Logout
-          </button>
         </div>
       </div>
 
