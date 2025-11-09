@@ -86,13 +86,13 @@ Website ini dapat di-deploy dengan 2 opsi:
 ### Quick Deploy
 
 **OPSI A - Hostinger:**
-1. Deploy backend ke Railway/Render (lihat `docs/DEPLOYMENT.md`)
+1. Deploy backend ke Render.com (recommended - free forever) atau Railway (lihat `docs/RENDER_QUICK_START.md` atau `docs/DEPLOYMENT.md`)
 2. Build: `npm run build` atau `./build-production.sh hostinger`
 3. Upload semua file dari `dist/` ke Hostinger `public_html/`
 4. Set environment variable `VITE_API_URL` di build
 
 **OPSI B - Netlify:**
-1. Deploy backend ke Railway/Render (lihat `docs/DEPLOYMENT.md`)
+1. Deploy backend ke Render.com (recommended - free forever) atau Railway (lihat `docs/RENDER_QUICK_START.md` atau `docs/DEPLOYMENT.md`)
 2. Connect repository ke Netlify
 3. Build command: `npm run build`
 4. Publish directory: `dist`

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: dalabangunnusa-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: ALLOWED_ORIGINS
+        sync: false  # Set this manually in Render dashboard
+    healthCheckPath: /api/health
+

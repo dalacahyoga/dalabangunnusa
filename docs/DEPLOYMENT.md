@@ -50,34 +50,64 @@ Panduan deployment untuk 2 case:
    - Contoh: `https://your-app.railway.app`
    - Backend API: `https://your-app.railway.app/api`
 
-#### B. Menggunakan Render.com
+#### B. Menggunakan Render.com (Recommended - Free Forever)
 
 1. **Buat Akun Render**
    - Kunjungi https://render.com
-   - Sign up dengan GitHub
+   - Sign up dengan GitHub (recommended) atau email
+   - Verifikasi email jika diperlukan
 
 2. **Create New Web Service**
-   - Klik "New +" → "Web Service"
+   - Klik "New +" di dashboard
+   - Pilih "Web Service"
    - Connect GitHub repository
+   - Pilih repository `dalabangunnusa`
+   - Klik "Connect"
 
-3. **Configure Service**
-   - **Name**: `dalabangunnusa-backend`
+3. **Configure Service Settings**
+   - **Name**: `dalabangunnusa-backend` (atau nama lain)
+   - **Region**: Pilih yang terdekat (Singapore untuk Indonesia)
+   - **Branch**: `main` (atau branch yang digunakan)
+   - **Root Directory**: (kosongkan, atau `./` jika perlu)
    - **Environment**: `Node`
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
-   - **Plan**: Free
+   - **Plan**: `Free` (750 jam/bulan, auto-sleep setelah 15 menit idle)
 
-4. **Environment Variables**
+4. **Set Environment Variables**
+   Klik "Advanced" → "Add Environment Variable", tambahkan:
    ```
+   NODE_ENV=production
    PORT=3001
    ALLOWED_ORIGINS=https://your-hostinger-domain.com
-   NODE_ENV=production
    ```
+   
+   **Catatan**: 
+   - Ganti `your-hostinger-domain.com` dengan domain Hostinger Anda
+   - Jika juga pakai Netlify, tambahkan: `ALLOWED_ORIGINS=https://your-hostinger-domain.com,https://your-netlify.netlify.app`
 
 5. **Deploy**
-   - Klik "Create Web Service"
-   - Render akan otomatis deploy
-   - Get URL: `https://your-app.onrender.com`
+   - Scroll ke bawah, klik "Create Web Service"
+   - Render akan mulai build dan deploy
+   - Proses pertama kali bisa memakan waktu 5-10 menit
+   - Tunggu sampai status "Live" (hijau)
+
+6. **Get Backend URL**
+   - Setelah deploy selesai, Render akan memberikan URL
+   - Format: `https://dalabangunnusa-backend.onrender.com`
+   - Backend API: `https://dalabangunnusa-backend.onrender.com/api`
+   - **Simpan URL ini** untuk konfigurasi frontend
+
+7. **Test Backend**
+   - Buka: `https://your-backend-url.onrender.com/api/health`
+   - Harus return: `{"status":"ok","timestamp":"..."}`
+   - Jika error, check logs di Render dashboard
+
+8. **Auto-Sleep Note**
+   - Free tier akan auto-sleep setelah 15 menit tidak ada request
+   - Request pertama setelah sleep akan memakan waktu ~30 detik (cold start)
+   - Ini normal untuk free tier
+   - Untuk menghindari sleep, bisa setup uptime monitor (UptimeRobot, dll)
 
 ### Step 2: Build Frontend untuk Hostinger
 
