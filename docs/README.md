@@ -6,9 +6,11 @@ Folder ini berisi semua dokumentasi teknis untuk proyek website PT. DaLa Bangun 
 
 ### Setup & Konfigurasi
 - **[ENV_SETUP.md](./ENV_SETUP.md)** - Panduan setup environment variables untuk development dan production
+- **[API_CONFIG.md](./API_CONFIG.md)** - ⚙️ Panduan konfigurasi API mode (API vs Static data)
 - **[VISITOR_LOG_SETUP.md](./VISITOR_LOG_SETUP.md)** - Panduan setup sistem visitor log
 
 ### Deployment
+- **[HOSTINGER_RAILWAY_DEPLOY.md](./HOSTINGER_RAILWAY_DEPLOY.md)** - ⭐ Panduan deployment Hostinger (FE) + Railway (BE)
 - **[RAILWAY_QUICK_START.md](./RAILWAY_QUICK_START.md)** - 🚂 Panduan cepat deploy backend ke Railway.app
 - **[RENDER_QUICK_START.md](./RENDER_QUICK_START.md)** - ⭐ Panduan cepat deploy backend ke Render.com (Recommended - Free Forever)
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Panduan lengkap deployment ke semua platform (Hostinger, Netlify, Railway, Render)

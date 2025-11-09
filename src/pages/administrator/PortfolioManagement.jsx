@@ -41,6 +41,7 @@ const PortfolioManagement = () => {
   const [message, setMessage] = useState({ type: '', text: '' })
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState('')
+  const [loadingFormData, setLoadingFormData] = useState(false)
 
   // Drag and drop sensors
   const sensors = useSensors(
@@ -53,6 +54,16 @@ const PortfolioManagement = () => {
   useEffect(() => {
     loadPortfolios()
   }, [])
+
+  // Debug: Log formData changes
+  useEffect(() => {
+    console.log('formData updated:', formData)
+  }, [formData])
+
+  // Debug: Log editingId changes
+  useEffect(() => {
+    console.log('editingId updated:', editingId)
+  }, [editingId])
 
   const loadPortfolios = async () => {
     try {
@@ -91,25 +102,64 @@ const PortfolioManagement = () => {
     setMessage({ type: '', text: '' })
   }
 
-  const handleEdit = (portfolio) => {
-    setEditingId(portfolio.id)
-    setShowAddForm(false)
-    setFormData({
+  const handleEdit = async (portfolio) => {
+    console.log('handleEdit called with portfolio:', portfolio)
+    
+    // Set formData immediately from portfolio (synchronous) so form renders with data
+    const initialFormData = {
       title: portfolio.title || '',
       location: portfolio.location || '',
       year: portfolio.year || '',
       slug: portfolio.slug || '',
       description: portfolio.description || '',
       thumbnail: portfolio.thumbnail || '',
-      images: [...(portfolio.images || [])]
-    })
-    setImageInput('')
+      images: Array.isArray(portfolio.images) ? [...portfolio.images] : []
+    }
+    console.log('Setting initial formData from portfolio:', initialFormData)
+    setFormData(initialFormData)
+    
+    setEditingId(portfolio.id)
+    setShowAddForm(false)
     setMessage({ type: '', text: '' })
+    setLoadingFormData(false) // Don't show loading since we already have data
+    setImageInput('')
+    
+    // Then fetch latest data from API in background to ensure we have all fields
+    try {
+      console.log('Fetching portfolio from API:', `${API_URL}/portfolios/${portfolio.id}`)
+      const response = await fetch(`${API_URL}/portfolios/${portfolio.id}`)
+      console.log('Response status:', response.status)
+      
+      if (response.ok) {
+        const portfolioData = await response.json()
+        console.log('Portfolio data from API:', portfolioData)
+        
+        const newFormData = {
+          title: portfolioData.title || '',
+          location: portfolioData.location || '',
+          year: portfolioData.year || '',
+          slug: portfolioData.slug || '',
+          description: portfolioData.description || '',
+          thumbnail: portfolioData.thumbnail || '',
+          images: Array.isArray(portfolioData.images) ? [...portfolioData.images] : []
+        }
+        
+        console.log('Updating formData with API data:', newFormData)
+        setFormData(newFormData)
+      } else {
+        console.warn('API response not OK:', response.status)
+        // Keep using initial formData from portfolio
+      }
+    } catch (error) {
+      console.error('Error fetching portfolio data:', error)
+      // Keep using initial formData from portfolio
+    }
   }
 
   const handleCancel = () => {
     setEditingId(null)
     setShowAddForm(false)
+    setLoadingFormData(false)
     setFormData({
       title: '',
       location: '',
@@ -382,7 +432,7 @@ const PortfolioManagement = () => {
   }
 
   // Sortable Portfolio Card Component
-  const SortablePortfolioCard = ({ portfolio, isHidden = false }) => {
+  const SortablePortfolioCard = ({ portfolio, isHidden = false, currentFormData, currentEditingId, onEdit, onDelete, onInputChange, onSave, onCancel, saving, imageInput, setImageInput, handleAddImage, handleRemoveImage, handleUploadThumbnail, handleUploadImages, uploading, uploadProgress }) => {
     const {
       attributes,
       listeners,
@@ -398,6 +448,16 @@ const PortfolioManagement = () => {
       opacity: isDragging ? 0.5 : 1,
       cursor: isDragging ? 'grabbing' : 'grab',
     }
+
+    const isEditing = currentEditingId === portfolio.id
+    
+    console.log('SortablePortfolioCard render:', {
+      portfolioId: portfolio.id,
+      currentEditingId,
+      isEditing,
+      hasFormData: !!currentFormData,
+      formDataTitle: currentFormData?.title
+    })
 
     return (
       <div
@@ -436,12 +496,12 @@ const PortfolioManagement = () => {
             </div>
           </div>
           <div className="portfolio-actions">
-            {editingId !== portfolio.id && (
+            {!isEditing && (
               <>
-                <button onClick={() => handleEdit(portfolio)} className="btn-edit">
+                <button onClick={() => onEdit(portfolio)} className="btn-edit">
                   Edit
                 </button>
-                <button onClick={() => handleDelete(portfolio.id)} className="btn-delete" disabled={saving}>
+                <button onClick={() => onDelete(portfolio.id)} className="btn-delete" disabled={saving}>
                   Delete
                 </button>
               </>
@@ -449,14 +509,16 @@ const PortfolioManagement = () => {
           </div>
         </div>
         
-        {editingId === portfolio.id && (
-          <div className="portfolio-edit-form">
+        {console.log('Checking edit form condition:', { isEditing, hasFormData: !!currentFormData, willRender: isEditing && currentFormData })}
+        {isEditing && currentFormData && (
+          <div className="portfolio-edit-form" key={`edit-form-${portfolio.id}-${JSON.stringify(currentFormData).substring(0, 50)}`}>
+            {console.log('Rendering edit form for portfolio:', portfolio.id, 'isEditing:', isEditing, 'currentFormData:', currentFormData)}
             <div className="form-group">
               <label>Title *</label>
               <input
                 type="text"
-                value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                value={currentFormData.title || ''}
+                onChange={(e) => onInputChange('title', e.target.value)}
                 className="form-control"
               />
             </div>
@@ -465,8 +527,8 @@ const PortfolioManagement = () => {
                 <label>Location</label>
                 <input
                   type="text"
-                  value={formData.location}
-                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  value={currentFormData.location || ''}
+                  onChange={(e) => onInputChange('location', e.target.value)}
                   className="form-control"
                 />
               </div>
@@ -474,8 +536,8 @@ const PortfolioManagement = () => {
                 <label>Year</label>
                 <input
                   type="text"
-                  value={formData.year}
-                  onChange={(e) => handleInputChange('year', e.target.value)}
+                  value={currentFormData.year || ''}
+                  onChange={(e) => onInputChange('year', e.target.value)}
                   className="form-control"
                 />
               </div>
@@ -484,17 +546,17 @@ const PortfolioManagement = () => {
               <label>Slug *</label>
               <input
                 type="text"
-                value={formData.slug}
-                onChange={(e) => handleInputChange('slug', e.target.value)}
+                value={currentFormData.slug || ''}
+                onChange={(e) => onInputChange('slug', e.target.value)}
                 className="form-control"
               />
-              <small>Will be used in URL: /portfolio/{formData.slug || 'slug'}</small>
+              <small>Will be used in URL: /portfolio/{currentFormData.slug || 'slug'}</small>
             </div>
             <div className="form-group">
               <label>Description</label>
               <textarea
-                value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
+                value={currentFormData.description || ''}
+                onChange={(e) => onInputChange('description', e.target.value)}
                 rows={4}
                 className="form-control"
               />
@@ -515,16 +577,16 @@ const PortfolioManagement = () => {
               </div>
               <input
                 type="text"
-                value={formData.thumbnail}
-                onChange={(e) => handleInputChange('thumbnail', e.target.value)}
+                value={currentFormData.thumbnail || ''}
+                onChange={(e) => onInputChange('thumbnail', e.target.value)}
                 className="form-control"
                 style={{ marginTop: '5px' }}
               />
               {uploadProgress && uploadProgress.includes('thumbnail') && (
                 <div style={{ marginTop: '5px', color: '#007bff' }}>{uploadProgress}</div>
               )}
-              {formData.thumbnail && (
-                <img src={formData.thumbnail} alt="Thumbnail preview" className="image-preview" />
+              {currentFormData.thumbnail && (
+                <img src={currentFormData.thumbnail} alt="Thumbnail preview" className="image-preview" />
               )}
             </div>
             <div className="form-group">
@@ -564,7 +626,7 @@ const PortfolioManagement = () => {
                 </button>
               </div>
               <div className="images-list">
-                {formData.images.map((image, index) => (
+                {currentFormData.images && currentFormData.images.map((image, index) => (
                   <div key={index} className="image-item">
                     <img src={image} alt={`Image ${index + 1}`} className="image-preview-small" />
                     <span className="image-url">{image}</span>
@@ -580,10 +642,10 @@ const PortfolioManagement = () => {
               </div>
             </div>
             <div className="form-actions">
-              <button onClick={handleSave} disabled={saving} className="btn-save">
+              <button onClick={onSave} disabled={saving} className="btn-save">
                 {saving ? 'Saving...' : 'Update Portfolio'}
               </button>
-              <button onClick={handleCancel} disabled={saving} className="btn-cancel">
+              <button onClick={onCancel} disabled={saving} className="btn-cancel">
                 Cancel
               </button>
             </div>
@@ -786,8 +848,8 @@ const PortfolioManagement = () => {
         </div>
       )}
 
-      {/* Portfolio List - Hide when editing or adding */}
-      {!editingId && !showAddForm && (
+      {/* Portfolio List - Hide only when adding, not when editing */}
+      {!showAddForm && (
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -807,7 +869,23 @@ const PortfolioManagement = () => {
                   <SortablePortfolioCard 
                     key={portfolio.id} 
                     portfolio={portfolio}
-                    isHidden={false}
+                    isHidden={editingId !== null && editingId !== portfolio.id}
+                    currentFormData={formData}
+                    currentEditingId={editingId}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onInputChange={handleInputChange}
+                    onSave={handleSave}
+                    onCancel={handleCancel}
+                    saving={saving}
+                    imageInput={imageInput}
+                    setImageInput={setImageInput}
+                    handleAddImage={handleAddImage}
+                    handleRemoveImage={handleRemoveImage}
+                    handleUploadThumbnail={handleUploadThumbnail}
+                    handleUploadImages={handleUploadImages}
+                    uploading={uploading}
+                    uploadProgress={uploadProgress}
                   />
                 ))
               )}

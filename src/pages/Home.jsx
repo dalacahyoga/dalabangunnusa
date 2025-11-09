@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import AnimateBox from '../components/AnimateBox/AnimateBox'
 import { getPageContent } from '../utils/contentLoader'
+import { loadPortfolios, formatPortfoliosForDisplay, getDefaultPortfolios } from '../utils/portfolioLoader'
 
 const Home = () => {
   const clientsContainerRef = useRef(null)
@@ -29,33 +30,25 @@ const Home = () => {
     loadContent()
   }, [])
 
-  // Load portfolios from API
+  // Load portfolios from API with fallback to default data
   const [portfolios, setPortfolios] = useState([])
 
   useEffect(() => {
-    const loadPortfolios = async () => {
+    const fetchPortfolios = async () => {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
-        const response = await fetch(`${apiUrl}/portfolios`)
-        if (response.ok) {
-          const data = await response.json()
-          // Transform data to match the expected format
-          const formattedPortfolios = data.map((p) => ({
-            id: p.id,
-            title: p.title,
-            location: `${p.location}${p.year ? ` (${p.year})` : ''}`,
-            image: p.thumbnail || '/images/portfolio/thumbnail/default.jpg',
-            link: `/portfolio/${p.slug}`,
-          }))
-          setPortfolios(formattedPortfolios)
-        }
+        // Load portfolios (will use default data if API fails)
+        const data = await loadPortfolios()
+        // Format for display
+        const formattedPortfolios = formatPortfoliosForDisplay(data)
+        setPortfolios(formattedPortfolios)
       } catch (error) {
         console.error('Error loading portfolios:', error)
-        // Fallback to empty array if API fails
-        setPortfolios([])
+        // Fallback to default data even if error
+        const defaultData = formatPortfoliosForDisplay(getDefaultPortfolios())
+        setPortfolios(defaultData)
       }
     }
-    loadPortfolios()
+    fetchPortfolios()
   }, [])
 
   // Desktop: Split by even/odd index (alternating columns)

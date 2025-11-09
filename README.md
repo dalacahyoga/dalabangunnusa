@@ -18,17 +18,23 @@ This is the official website for PT. DaLa Bangun Nusa, an experienced architectu
 ```
 dalabangunnusa/
 ├── public/                    # Static assets
-│   ├── images/               # Images and portfolio photos
-│   └── .htaccess             # Apache config for Hostinger
+│   └── images/               # Images and portfolio photos
 ├── src/
 │   ├── assets/               # CSS and fonts
 │   ├── components/          # Reusable React components
 │   ├── pages/               # Page components
-│   │   ├── administrator/   # Admin pages (Login, Visitor Log)
-│   │   └── portfolio/        # Portfolio detail pages
+│   │   └── administrator/   # Admin pages (Login, Visitor Log, Content/Portfolio Management)
 │   ├── utils/               # Utility functions
 │   ├── App.jsx              # Main app component with routes
 │   └── main.jsx             # Application entry point
+├── data/                     # Server data files (JSON)
+│   ├── visitor_logs.json    # Visitor logs
+│   ├── content.json         # CMS content
+│   └── portfolios.json      # Portfolio data
+├── scripts/                  # Build and deployment scripts
+│   ├── build-production.sh # Production build script (Linux/Mac)
+│   ├── build-production.bat # Production build script (Windows)
+│   └── deploy-hostinger.sh  # Hostinger deployment script
 ├── docs/                     # Documentation files
 │   ├── DEPLOYMENT.md        # Deployment guide
 │   ├── ENV_SETUP.md         # Environment setup
@@ -36,6 +42,8 @@ dalabangunnusa/
 │   └── ...                  # Other documentation
 ├── netlify/                  # Netlify serverless functions
 ├── server.js                 # Express API server
+├── railway.json             # Railway.app configuration
+├── render.yaml              # Render.com configuration
 ├── netlify.toml             # Netlify configuration
 └── package.json             # Dependencies and scripts
 ```
@@ -86,10 +94,15 @@ Website ini dapat di-deploy dengan 2 opsi:
 ### Quick Deploy
 
 **OPSI A - Hostinger:**
-1. Deploy backend ke Render.com (recommended - free forever) atau Railway (lihat `docs/RENDER_QUICK_START.md` atau `docs/DEPLOYMENT.md`)
-2. Build: `npm run build` atau `./build-production.sh hostinger`
-3. Upload semua file dari `dist/` ke Hostinger `public_html/`
-4. Set environment variable `VITE_API_URL` di build
+1. ✅ Backend sudah di Railway (atau deploy ke Render.com/Railway - lihat `docs/RENDER_QUICK_START.md` atau `docs/RAILWAY_QUICK_START.md`)
+2. **Buat `.env.production`** dengan Railway backend URL:
+   ```
+   VITE_API_URL=https://your-railway-backend.up.railway.app/api
+   VITE_USE_API=true
+   ```
+3. **Build:** `npm run build` (atau `./scripts/build-production.sh hostinger https://your-railway-backend.up.railway.app/api`)
+4. **Upload:** Upload semua file dari `dist/` ke Hostinger `public_html/`
+5. **Lihat:** `docs/HOSTINGER_RAILWAY_DEPLOY.md` untuk panduan lengkap
 
 **OPSI B - Netlify:**
 1. Deploy backend ke Render.com (recommended - free forever) atau Railway (lihat `docs/RENDER_QUICK_START.md` atau `docs/DEPLOYMENT.md`)

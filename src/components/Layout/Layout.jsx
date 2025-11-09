@@ -28,11 +28,12 @@ const Layout = () => {
     closeOffcanvas()
   }, [location])
 
-  // Log visitor on route change
+  // Log visitor on route change - non-blocking, optional
   useEffect(() => {
     // Skip logging for the visitor log page itself
-    if (location.pathname !== '/dcg-visitor' && location.pathname !== '/dcg-content') {
+    if (location.pathname !== '/dcg-visitor' && location.pathname !== '/dcg-content' && location.pathname !== '/dcg-portfolio') {
       const pageName = location.pathname === '/' ? 'Home' : location.pathname
+      // Fire-and-forget: tidak await, tidak blocking website functionality
       logVisitor(pageName)
     }
   }, [location])

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import PortfolioDetail from '../components/PortfolioDetail/PortfolioDetail'
+import { getPortfolioBySlug } from '../utils/portfolioLoader'
 
 const PortfolioDetailPage = () => {
   const { slug } = useParams()
@@ -13,21 +14,19 @@ const PortfolioDetailPage = () => {
     const loadPortfolio = async () => {
       try {
         setLoading(true)
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
-        const response = await fetch(`${apiUrl}/portfolios/slug/${slug}`)
+        setError(null)
         
-        if (response.ok) {
-          const data = await response.json()
+        // Load portfolio (will use default data if API fails)
+        const data = await getPortfolioBySlug(slug)
+        
+        if (data) {
           setPortfolio(data)
-          setError(null)
-        } else if (response.status === 404) {
+        } else {
           setError('Portfolio not found')
           // Redirect to portfolio page after 2 seconds
           setTimeout(() => {
             navigate('/portfolio')
           }, 2000)
-        } else {
-          setError('Failed to load portfolio')
         }
       } catch (error) {
         console.error('Error loading portfolio:', error)
